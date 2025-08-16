@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
+    header { background: #4CAF50; color: white; padding: 1rem; text-align: center; }
+    .container { max-width: 800px; margin: 2rem auto; padding: 1rem; background: white; border-radius: 8px; }
+    h2 { margin-top: 0; }
+    input, button { padding: 0.5rem; margin: 0.3rem 0; width: 100%; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 0.5rem; border-bottom: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
+    button.delete-btn { background: red; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Admin Dashboard</h1>
+</header>
+
+<div class="container">
+  <h2>Add Product</h2>
+  <form id="addProductForm">
+    <input type="text" id="name" placeholder="Product Name" required>
+    <input type="text" id="description" placeholder="Description">
+    <input type="number" id="price" placeholder="Price" required>
+    <input type="number" id="quantity" placeholder="Quantity" required>
+    <button type="submit">Add Product</button>
+  </form>
+
+  <h2>Product List</h2>
+  <ul id="productList"></ul>
+</div>
+
+<script>
+const API_URL = 'http://localhost:5000'; // backend URL
+
+// Fetch products and render list
+async function fetchProducts() {
+  const res = await fetch(`${API_URL}/products`);
+  const products = await res.json();
+  const list = document.getElementById('productList');
+  list.innerHTML = '';
+  products.forEach(prod => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      ${prod.name} - $${prod.price} (Qty: ${prod.quantity})
+      <button class="delete-btn" onclick="deleteProduct('${prod._id}')">Delete</button>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// Add new product
+document.getElementById('addProductForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name = document.getElementById('name').value;
+  const description = document.getElementById('description').value;
+  const price = document.getElementById('price').value;
+  const quantity = document.getElementById('quantity').value;
+
+  const res = await fetch(`${API_URL}/product/add`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, description, price, quantity })
+  });
+
+  if(res.ok){
+    document.getElementById('addProductForm').reset();
+    fetchProducts(); // refresh product list
+  } else {
+    alert('❌ Failed to add product');
+  }
+});
+
+// Delete product
+async function deleteProduct(id) {
+  const res = await fetch(`${API_URL}/product/remove/${id}`, { method: 'DELETE' });
+  if(res.ok) fetchProducts();
+  else alert('❌ Failed to remove product');
+}
+
+// Initial fetch
+fetchProducts();
+</script>
+
+</body>
+</html>

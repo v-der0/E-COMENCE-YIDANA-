@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f2f2f2; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+.container { background:white; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.2); width:320px; }
+h2 { text-align:center; color:#333; }
+input, select, button { width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc; }
+button { background:#4CAF50; color:white; border:none; cursor:pointer; }
+button:hover { background:#45a049; }
+.message { text-align:center; margin-top:10px; font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Register</h2>
+<form id="registerForm">
+<input type="text" name="fullName" placeholder="Full Name" required>
+<input type="email" name="email" placeholder="Email" required>
+<select name="role" required>
+<option value="">Select Role</option>
+<option value="admin">Admin</option>
+<option value="buyer">Buyer</option>
+</select>
+<button type="submit">Register</button>
+</form>
+<div class="message" id="message"></div>
+</div>
+
+<script>
+const form = document.getElementById('registerForm');
+const msg = document.getElementById('message');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.textContent = '⏳ Registering...';
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    try {
+        const res = await fetch('http://localhost:5000/register', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        const text = await res.text();
+        msg.textContent = text;
+
+        if(res.ok) form.reset();
+    } catch(err) {
+        console.error(err);
+        msg.textContent = '❌ Cannot connect to server';
+    }
+});
+</script>
+</body>
+</html>

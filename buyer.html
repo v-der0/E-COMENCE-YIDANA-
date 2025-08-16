@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyer Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
+    header { background: #2196F3; color: white; padding: 1rem; text-align: center; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 1rem; background: white; border-radius: 8px; }
+    h2 { margin-top: 0; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 0.5rem; border-bottom: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
+    button { padding: 0.3rem 0.5rem; cursor: pointer; }
+    .add-btn { background: #4CAF50; color: white; border: none; }
+    .remove-btn { background: red; color: white; border: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Buyer Dashboard</h1>
+</header>
+
+<div class="container">
+  <h2>Available Products</h2>
+  <ul id="productList"></ul>
+
+  <h2>My Cart</h2>
+  <ul id="cartList"></ul>
+</div>
+
+<script>
+const API_URL = 'http://localhost:5000'; // backend URL
+const USER_ID = 'ENTER_BUYER_USERID_HERE'; // Replace with actual logged-in buyer ID
+
+// Fetch products (same as admin sees)
+async function fetchProducts() {
+  const res = await fetch(`${API_URL}/products`);
+  const products = await res.json();
+  const list = document.getElementById('productList');
+  list.innerHTML = '';
+  products.forEach(prod => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      ${prod.name} - GH₵${prod.price} (Qty: ${prod.quantity})
+      <button class="add-btn" onclick="addToCart('${prod._id}')">Add to Cart</button>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// Fetch buyer cart
+async function fetchCart() {
+  const res = await fetch(`${API_URL}/cart/${USER_ID}`);
+  const cart = await res.json();
+  const list = document.getElementById('cartList');
+  list.innerHTML = '';
+  cart.forEach(prod => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      ${prod.name} - GH₵${prod.price}
+      <button class="remove-btn" onclick="removeFromCart('${prod._id}')">Remove</button>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// Add product to cart
+async function addToCart(productID) {
+  try {
+    const res = await fetch(`${API_URL}/cart/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userID: USER_ID, productID })
+    });
+    if (!res.ok) throw new Error('Failed to add to cart');
+    fetchCart(); // Update cart immediately
+  } catch(err) {
+    alert('❌ Failed to add to cart');
+    console.error(err);
+  }
+}
+
+// Remove product from cart
+async function removeFromCart(productID) {
+  try {
+    const res = await fetch(`${API_URL}/cart/remove`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userID: USER_ID, productID })
+    });
+    if (!res.ok) throw new Error('Failed to remove from cart');
+    fetchCart(); // Update cart immediately
+  } catch(err) {
+    alert('❌ Failed to remove from cart');
+    console.error(err);
+  }
+}
+
+// Initial load
+fetchProducts();
+fetchCart();
+</script>
+
+</body>
+</html>

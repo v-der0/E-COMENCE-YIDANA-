@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Commerce Portal</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+}
+
+/* Animated background elements */
+body::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    top: -100px;
+    left: -100px;
+    animation: float 15s infinite linear;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    bottom: -50px;
+    right: -50px;
+    animation: float 12s infinite linear reverse;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+        transform: translate(50px, 50px) rotate(180deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+}
+
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    padding: 60px 50px;
+    border-radius: 25px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 10;
+    max-width: 600px;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.1) 50%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: rotate(30deg);
+    animation: shine 6s infinite;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) rotate(30deg);
+    }
+    100% {
+        transform: translateX(100%) rotate(30deg);
+    }
+}
+
+.container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+}
+
+h1 {
+    font-size: 3.5em;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 15px rgba(0,0,0,0.3);
+    letter-spacing: 1px;
+    font-weight: 800;
+    background: linear-gradient(to right, #fff, #f0f0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    animation: fadeIn 1s ease;
+}
+
+p {
+    font-size: 1.3em;
+    margin-bottom: 45px;
+    text-shadow: 1px 1px 8px rgba(0,0,0,0.2);
+    line-height: 1.7;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+    animation: fadeIn 1.2s ease;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    animation: fadeIn 1.4s ease;
+}
+
+button {
+    padding: 18px 40px;
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    letter-spacing: 0.8px;
+    position: relative;
+    overflow: hidden;
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.3) 50%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: translateX(-100%);
+}
+
+button:hover::after {
+    animation: shine-over 1.5s infinite;
+}
+
+@keyframes shine-over {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+button.login { 
+    background: linear-gradient(45deg, #4CAF50, #2E8B57);
+    color: white; 
+}
+
+button.login:hover { 
+    background: linear-gradient(45deg, #45a049, #2a7a4f);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+button.register { 
+    background: linear-gradient(45deg, #FF9800, #FF8C00);
+    color: white; 
+}
+
+button.register:hover { 
+    background: linear-gradient(45deg, #e68900, #e67e00);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Floating particles */
+.particle {
+    position: absolute;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    animation: float-particle linear infinite;
+    z-index: -1;
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+<body>
+<!-- Floating particles -->
+<div id="particles"></div>
+
+<div class="container">
+<h1>Welcome to E-Commerce Portal</h1>
+<p>Login if you already have an account, or register to start shopping!</p>
+<div class="button-group">
+    <button class="login" onclick="window.location.href='login.html'">Login</button>
+    <button class="register" onclick="window.location.href='register.html'">Register</button>
+</div>
+</div>
+
+<script>
+// Create floating particles
+document.addEventListener('DOMContentLoaded', function() {
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 20;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 10 + 5;
+        const posX = Math.random() * window.innerWidth;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 10;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}px`;
+        particle.style.bottom = '0';
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `${delay}s`;
+        
+        particlesContainer.appendChild(particle);
+    }
+});
+</script>
+</body>
+</html>
